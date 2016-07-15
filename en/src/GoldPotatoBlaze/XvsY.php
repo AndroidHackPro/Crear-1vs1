@@ -61,7 +61,7 @@ class XvsY extends PluginBase implements Listener{
 				$vs1 = $vs1 + $vs[$i];
 			}
 			if($this->system["GamesRun"] == "on"){
-				$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eEl juego se lleno!");
+				$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eEl juego se llenó!");
 			}else{
 				$member = explode(":",$this->system["MenberTima"]);
 				if(strpos($this->system["MenberTima"],":")){
@@ -71,7 +71,7 @@ class XvsY extends PluginBase implements Listener{
 					$a = strpos($this->system["MenberTima"],$event->getPlayer()->getName());
 				}
 				if(strpos($this->system["MenberTima"],":".$event->getPlayer()->getName().":")||$a||$member[0] == $event->getPlayer()->getName()){
-					$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eYa estas aceptado en el juego!");
+					$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eYa estás aceptado en el juego!");
 				}else{
 					if($this->system["MenberTima"] != ""){
 						$this->system["MenberTima"] = $this->system["MenberTima"].":".$event->getPlayer()->getName();
@@ -174,7 +174,7 @@ class XvsY extends PluginBase implements Listener{
 							$player1->save();
 						}
 					}else{
-						Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e ".$event->getPlayer()->getName()." estas aceptado!");
+						Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e ".$event->getPlayer()->getName()." estás aceptado!");
 					}
 				}
 			}
@@ -195,7 +195,7 @@ class XvsY extends PluginBase implements Listener{
 					if(isset($this->system["Teams"][$a])){
 						if(isset($this->system["Teams"][$b])){
 							if($this->system["Teams"][$a] == $this->system["Teams"][$b]){
-								$event->getDamager()->getPlayer()->sendPopup("§eNo lo golpees, es miembro de tu equipo!");
+								$event->getDamager()->getPlayer()->sendPopup("§eNo le hagas daño, es miembro de tu equipo!");
 								$event->setCancelled(true);
 							}
 						}else{
@@ -399,7 +399,7 @@ class XvsY2CountDown extends PluginTask{
 			$player->sendPopup("§l".$this->down);
 		}
 		if($this->down == 0){
-			Server::getInstance()->broadcastMessage("§e[".$this->vs->get("XvsY")."] Se acabo el tiempo!!");
+			Server::getInstance()->broadcastMessage("§e[".$this->vs->get("XvsY")."] Se acabó el tiempo!");
 			unset($this->this->system["MenberTima"]);
 			$this->this->system["MenberTima"] = "";
 			unset($this->this->system["GamesRun"]);
