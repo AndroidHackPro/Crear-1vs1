@@ -1,0 +1,51 @@
+---
+//AndroidHackPro CrafteoLife
+// Bloque que se usara para entrar a la arena
+AcceptBlock: "129"
+XvsY: 2vs2
+TpZone:
+//En X,Y,Z escribe las coordenadas en las que apareceran los equipos, recuerda poner a 1 y 2 juntos y al 3 y 4 juntos
+//En CrafteoLife escribe el mundo donde este la arena
+  Player1:
+    x: 128
+    "y": 4
+    z: 128
+    TpZoneWorld: CrafteoLife
+  Player2:
+    x: 128
+    "y": 4
+    z: 128
+    TpZoneWorld: CrafteoLife
+  Player3:
+    x: 128
+    "y": 4
+    z: 128
+    TpZoneWorld: CrafteoLife
+  Player4:
+    x: 128
+    "y": 4
+    z: 128
+    TpZoneWorld: CrafteoLife
+//En Health la cantidad de corazones con que aparecen, en MaxplayerHealth la maxima vida que puedem alcanzar
+//En TimeUp el tiempo que durara la batalla, 60 es igual a 1 minuto, 2 minutos ppor defecto
+//En ItemEffectClear para limpiar el inventario
+PlayerHealth: "20"
+MaxPlayerHealth: "20"
+TimeUPsTIME(sec...): "120"
+ItemEffectClear(on,off): "on"
+//En ItemPacks las armas o comida que llevaran los jugadores, solo dos
+ItemPacks:
+  ItemPacks1(ID:Meta:Count): "276:0:1"
+  ItemPacks2(ID:Meta:Count): "466:0:2"
+//La armadura
+ArmorPacks:
+  Helmet: 310
+  chestplate: 311
+  Pants: 312
+  Boots: 313
+//Las posiones/efectos que tendran los jugadores
+EffectPacks:
+  Effect1(ID:sec:power): "0:0:0"
+  Effect2(ID:sec:power): "0:0:0"
+WorldReSpawn: Arenas
+...
