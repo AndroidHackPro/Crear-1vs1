@@ -18,6 +18,7 @@ use pocketmine\item\Item;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\inventory\PlayerInventory;
+use BoxOfDevs\WinAPI\main;
 class XvsY extends PluginBase implements Listener{
 	public function onEnable(){
 		if(!file_exists($this->getDataFolder())){
@@ -30,11 +31,12 @@ class XvsY extends PluginBase implements Listener{
 				"TpZone"=>array("Player1"=>array("x"=>128,"y"=>4,"z"=>128,"TpZoneWorld"=>"world"),"Player2"=>array("x"=>128,"y"=>4,"z"=>128,"TpZoneWorld"=>"world"),"Player3"=>array("x"=>128,"y"=>4,"z"=>128,"TpZoneWorld"=>"world"),"Player4"=>array("x"=>128,"y"=>4,"z"=>128,"TpZoneWorld"=>"world")),
 				"PlayerHealth"=>"20",
 				"MaxPlayerHealth"=>"20",
-				"TimeUPsTIME(sec...)"=>"120",
+				"TimeUPsTIME(seg...)"=>"120",
 				"ItemEffectClear(on,off)"=>"on",
 				"ItemPacks"=>array("ItemPacks1(ID:Meta:Count)"=>"0:0:0","ItemPacks2(ID:Meta:Count)"=>"0:0:0"),
 				"ArmorPacks"=>array("Helmet"=>0,"chestplate"=>0,"Pants"=>0,"Boots"=>0),
 				"EffectPacks"=>array("Effect1(ID:sec:power)"=>"0:0:0","Effect2(ID:sec:power)"=>"0:0:0"),
+				"WorldReSpawn"=>array("Arenas"),
 				));
 		$this->system["GamesRun"] = "off";
 		$this->system["MenberTima"] = "";
@@ -42,7 +44,14 @@ class XvsY extends PluginBase implements Listener{
 		$this->system["Teams2"] = "";
 		$this->system["Motion"] = "off";
 		$vsvs = $this;
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->getServer()->getPluginManager()->registerEvents($this,$this);
+		$this->getLogger()->info("WinAPI ACTIVADO!");
+		if($this->getServer()->getPluginManager()->getPlugin("WinAPI")!=null){
+		   $this->winapi=$this->getServer()->getPlugin("WinAPI");		
+		   $this->getLogger()->notice("Se detecto satisfactoriamente WinAPI");
+		}else{
+		   $this->getLogger()->warning("Por favor instala WinAPI por BoxOfDevs para hacer este plugin compatible con PREMIOS (CrafteoLife");
+		}
 	}
 	public function vsTouch(PlayerInteractEvent $event){
 		if($event->getBlock()->getId() == $this->config->get("AcceptBlock")){
@@ -52,7 +61,7 @@ class XvsY extends PluginBase implements Listener{
 				$vs1 = $vs1 + $vs[$i];
 			}
 			if($this->system["GamesRun"] == "on"){
-				$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eGame Is Full!!");
+				$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eEl juego se lleno!");
 			}else{
 				$member = explode(":",$this->system["MenberTima"]);
 				if(strpos($this->system["MenberTima"],":")){
@@ -62,7 +71,7 @@ class XvsY extends PluginBase implements Listener{
 					$a = strpos($this->system["MenberTima"],$event->getPlayer()->getName());
 				}
 				if(strpos($this->system["MenberTima"],":".$event->getPlayer()->getName().":")||$a||$member[0] == $event->getPlayer()->getName()){
-					$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eGame Accept Is Complate!!");
+					$event->getPlayer()->sendMessage("§c§d[".$this->config->get("XvsY")."] §eYa estas aceptado en el juego!");
 				}else{
 					if($this->system["MenberTima"] != ""){
 						$this->system["MenberTima"] = $this->system["MenberTima"].":".$event->getPlayer()->getName();
@@ -84,10 +93,10 @@ class XvsY extends PluginBase implements Listener{
 						unset($a);
 						for($i = 0;$i < $vs1;$i++){
 							if($vs[$i1] > $i2){
-								$a = $this->system["Teams"];
+								$a = $this->system["Equipos"];
 								$a[$member1[$i3]] = $i1;
-								$this->system["Teams"][$member1[$i3]] = $i1;
-								$this->system["Teams2"][$member1[$i3]] = $i1;
+								$this->system["Equipo 1"][$member1[$i3]] = $i1;
+								$this->system["Equipo 2"][$member1[$i3]] = $i1;
 								$i3++;
 								$i2++;
 							}else{
@@ -112,7 +121,7 @@ class XvsY extends PluginBase implements Listener{
 						$this->system["Motion"] = "on";
 						foreach($member1 as $name){
 							if(isset($message)){
-								if($name1 ==  $this->system["Teams"][$name]){
+								if($name1 ==  $this->system["Equipos"][$name]){
 									$message = $message."&".$name;
 								}else{
 									$message = $message."§cvs§a".$name;
@@ -120,9 +129,9 @@ class XvsY extends PluginBase implements Listener{
 							}else{
 								$message = $name;
 							}
-							$name1 = $this->system["Teams"][$name];
+							$name1 = $this->system["Equipos"][$name];
 						}
-						Server::getInstance()->broadcastMessage("§a§d[".$this->config->get("XvsY")."] §e".$message." Of Game Start!!");
+						Server::getInstance()->broadcastMessage("§a§d[".$this->config->get("XvsY")."] §e".$message." para que el juego inicie!!");
 						foreach($player as $gm0){
 							$gm0->setGamemode(0);
 						}
@@ -165,7 +174,7 @@ class XvsY extends PluginBase implements Listener{
 							$player1->save();
 						}
 					}else{
-						Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e ".$event->getPlayer()->getName()." Is Accept!!");
+						Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e ".$event->getPlayer()->getName()." estas aceptado!");
 					}
 				}
 			}
@@ -186,11 +195,11 @@ class XvsY extends PluginBase implements Listener{
 					if(isset($this->system["Teams"][$a])){
 						if(isset($this->system["Teams"][$b])){
 							if($this->system["Teams"][$a] == $this->system["Teams"][$b]){
-								$event->getDamager()->getPlayer()->sendPopup("§cIt Is Team Member!!");
+								$event->getDamager()->getPlayer()->sendPopup("§eNo lo golpees, es miembro de tu equipo!");
 								$event->setCancelled(true);
 							}
 						}else{
-							$event->getDamager()->getPlayer()->sendMessage("§cStarting Game!!");
+							$event->getDamager()->getPlayer()->sendMessage("§cEl juego a empezado!");
 							$event->setCancelled(true);
 						}
 					}
@@ -220,7 +229,7 @@ class XvsY extends PluginBase implements Listener{
 		if(strpos($this->system["MenberTima"],":".$event->getPlayer()->getName().":")||$a||$member[0] == $event->getPlayer()->getName()){
 			$member = explode(":",$this->system["MenberTima"]);
 			if($this->system["GamesRun"] == "on"){
-				Server::getInstance()->broadcastMessage("§d[".$this->config->get("XvsY")."]§e ".$event->getPlayer()->getName()." Is Leave!!");
+				Server::getInstance()->broadcastMessage("§d[".$this->config->get("XvsY")."]§e ".$event->getPlayer()->getName()." se ha ido!");
 				$c = $this->system["Teams"];
 				unset($c[$event->getPlayer()->getName()]);
 				$this->system["Teams"] = $c;
@@ -242,7 +251,8 @@ class XvsY extends PluginBase implements Listener{
 						$i++;
 						}
 					}
-					Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e Game Is Finish!!\n§eWinner ".$wins1." !!");
+					Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e El juego terminó!!\n§eGanador ".$wins1." !!");
+					$this->winapi->addWin($wins1);
 					unset($this->system["MenberTima"]);
 					$this->system["MenberTima"] = "";
 					unset($this->system["GamesRun"]);
@@ -255,7 +265,7 @@ class XvsY extends PluginBase implements Listener{
 					foreach($member as $tp){
 						$tp = $this->getServer()->getPlayer($tp);
 						if($tp !== null){
-							$tp->teleport($this->getServer()->getDefaultLevel()->getSpawn());
+							$tp->teleport($this->getServer()->config->get("WorldReSpawn")->getSpawn());
 							if($this->config->get("ItemEffectClear(on,off)") == "on"){
 								$tp->removeAllEffects();
 								$tp->getInventory()->clearAll();
@@ -321,7 +331,7 @@ class XvsY extends PluginBase implements Listener{
 						$i++;
 						}
 					}
-					Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e Game Is Finish!!\n§eWinner ".$wins1." !!");
+					Server::getInstance()->broadcastMessage("§e§d[".$this->config->get("XvsY")."]§e El juego terminó!!\n§eGanador ".$wins1." !!");
 					unset($this->system["MenberTima"]);
 					$this->system["MenberTima"] = "";
 					unset($this->system["GamesRun"]);
@@ -362,13 +372,13 @@ class XvsYCountDown extends PluginTask{
 		}
 		if($this->down == 0){
 			$this->this->system["Motion"] = "off";
-			$down = $this->setting->get("TimeUPsTIME(sec...)");
-			for ( $i = 0; $i < $this->setting->get("TimeUPsTIME(sec...)") + 1 ; $i++){
+			$down = $this->setting->get("TimeUPsTIME(seg...)");
+			for ( $i = 0; $i < $this->setting->get("TimeUPsTIME(seg...)") + 1 ; $i++){
 				$task = new XvsY2CountDown($this->this,$this->player,$down,$this->owner,$this->getServer,$this->setting);
 				$this->getServer->getScheduler()->scheduleDelayedTask($task,$i*20);
 				foreach($this->player as $player){
-					$player->sendTip("§c§lstart!!");
-					$player->sendTip("§c§lstart!!");
+					$player->sendTip("§c§lEmpieza!!");
+					$player->sendTip("§c§lEmpieza!!");
 				}
 				$down--;
 			}
@@ -389,7 +399,7 @@ class XvsY2CountDown extends PluginTask{
 			$player->sendPopup("§l".$this->down);
 		}
 		if($this->down == 0){
-			Server::getInstance()->broadcastMessage("§e[".$this->vs->get("XvsY")."] TimeUP!!");
+			Server::getInstance()->broadcastMessage("§e[".$this->vs->get("XvsY")."] Se acabo el tiempo!!");
 			unset($this->this->system["MenberTima"]);
 			$this->this->system["MenberTima"] = "";
 			unset($this->this->system["GamesRun"]);
